@@ -3,31 +3,30 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Cabio.Dashboard.Auth
+namespace Cabio.Dashboard.Auth.Services
 {
     public class JwtService : IJwtService
     {
         private readonly string _secret;
         private readonly string _issuer;
-        private const int TokenExpiryHours = 2;
+        private const int TokenExpiryHours = 2; // Make expiry configurable via appsettings
+        private readonly byte[] _keyBytes;
+        private readonly JwtSecurityTokenHandler _tokenHandler = new();
 
         public JwtService(string secret, string issuer)
         {
             _secret = secret;
             _issuer = issuer;
+            _keyBytes = Encoding.UTF8.GetBytes(secret);
         }
 
-        public string GenerateToken(string username, string role)
-        {
-            var key = Encoding.UTF8.GetBytes(_secret);
-            var tokenHandler = new JwtSecurityTokenHandler();
+        public string GenerateToken(string username, string role) =>
+            _tokenHandler.WriteToken(
+                _tokenHandler.CreateToken(
+                    CreateTokenDescriptor(username, role, _keyBytes)
+                )
+            );
 
-            var tokenDescriptor = CreateTokenDescriptor(username, role, key);
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
-        }
-        
         private SecurityTokenDescriptor CreateTokenDescriptor(string username, string role, byte[] key)
         {
             return new SecurityTokenDescriptor

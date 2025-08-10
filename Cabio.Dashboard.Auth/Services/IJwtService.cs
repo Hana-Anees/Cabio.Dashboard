@@ -1,4 +1,4 @@
-﻿namespace Cabio.Dashboard.Auth
+﻿namespace Cabio.Dashboard.Auth.Services
 {
     public interface IJwtService
     {

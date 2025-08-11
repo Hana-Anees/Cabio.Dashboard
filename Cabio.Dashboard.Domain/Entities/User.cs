@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cabio.Dashboard.Infrastructure.Entities
+namespace Cabio.Dashboard.Domain.Entities
 {
     internal class User
     {

@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Cabio.Dashboard.Auth\Cabio.Dashboard.Auth.csproj" />
     <ProjectReference Include="..\Cabio.Dashboard.Infrastructure\Cabio.Dashboard.Infrastructure.csproj" />
+    <ProjectReference Include="..\Cabio.Dashboard.Domain\Cabio.Dashboard.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,14 @@
 ﻿using Cabio.Dashboard.Auth.Services;
+using Cabio.Dashboard.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddInfrastructure(connectionString);
 
 // JWT config (later move to appsettings.json)
 var jwtSecret = "SuperSecretKey1234567890987654321123456";

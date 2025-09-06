@@ -1,4 +1,4 @@
-﻿using Cabio.Dashboard.Api.Models;
+﻿using Cabio.Dashboard.Api.Dtos;
 using Cabio.Dashboard.Auth.Services;
 using Microsoft.AspNetCore.Mvc;
 

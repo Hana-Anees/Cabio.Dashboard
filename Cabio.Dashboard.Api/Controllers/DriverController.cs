@@ -1,4 +1,4 @@
-﻿using Cabio.Dashboard.Api.Models;
+﻿using Cabio.Dashboard.Api.Dtos;
 using Cabio.Dashboard.Domain.Entities;
 using Cabio.Dashboard.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;

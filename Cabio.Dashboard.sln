@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cabio.Dashboard.Infrastruct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cabio.Dashboard.Domain", "Cabio.Dashboard.Domain\Cabio.Dashboard.Domain.csproj", "{2585DB8C-B3F7-7576-11B5-1A873AD5FB5A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cabio.Dashboard.Application", "Cabio.Dashboard.Application\Cabio.Dashboard.Application.csproj", "{EB2E43DE-8E05-E53A-BD1D-4BEC15FE8544}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,18 @@ Global
 		{2585DB8C-B3F7-7576-11B5-1A873AD5FB5A}.Release|x64.Build.0 = Release|Any CPU
 		{2585DB8C-B3F7-7576-11B5-1A873AD5FB5A}.Release|x86.ActiveCfg = Release|Any CPU
 		{2585DB8C-B3F7-7576-11B5-1A873AD5FB5A}.Release|x86.Build.0 = Release|Any CPU
+		{EB2E43DE-8E05-E53A-BD1D-4BEC15FE8544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB2E43DE-8E05-E53A-BD1D-4BEC15FE8544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB2E43DE-8E05-E53A-BD1D-4BEC15FE8544}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EB2E43DE-8E05-E53A-BD1D-4BEC15FE8544}.Debug|x64.Build.0 = Debug|Any CPU
+		{EB2E43DE-8E05-E53A-BD1D-4BEC15FE8544}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EB2E43DE-8E05-E53A-BD1D-4BEC15FE8544}.Debug|x86.Build.0 = Debug|Any CPU
+		{EB2E43DE-8E05-E53A-BD1D-4BEC15FE8544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB2E43DE-8E05-E53A-BD1D-4BEC15FE8544}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB2E43DE-8E05-E53A-BD1D-4BEC15FE8544}.Release|x64.ActiveCfg = Release|Any CPU
+		{EB2E43DE-8E05-E53A-BD1D-4BEC15FE8544}.Release|x64.Build.0 = Release|Any CPU
+		{EB2E43DE-8E05-E53A-BD1D-4BEC15FE8544}.Release|x86.ActiveCfg = Release|Any CPU
+		{EB2E43DE-8E05-E53A-BD1D-4BEC15FE8544}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

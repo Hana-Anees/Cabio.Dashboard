@@ -1,19 +1,17 @@
 ﻿using AutoMapper;
-using Cabio.Dashboard.Api.Models;
+using Cabio.Dashboard.Api.Dtos;
 using Cabio.Dashboard.Domain.Entities;
 using Cabio.Dashboard.Domain.Interfaces;
 using MediatR;
 
-namespace Cabio.Dashboard.Application.Drivers.Commands
-{
-    public record CreateDriverCommand(CreateDriverDto DriverDto) : IRequest<DriverDto>;
-
-    public class CreateDriverHandler : IRequestHandler<CreateDriverCommand, DriverDto>
+namespace Cabio.Dashboard.Application.Drivers.Commands.CreateDriver
+{    
+    public class CreateDriverCommandHandler : IRequestHandler<CreateDriverCommand, DriverDto>
     {
         private readonly IDriverRepository _repository;
         private readonly IMapper _mapper;
 
-        public CreateDriverHandler(IDriverRepository repository, IMapper mapper)
+        public CreateDriverCommandHandler(IDriverRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;

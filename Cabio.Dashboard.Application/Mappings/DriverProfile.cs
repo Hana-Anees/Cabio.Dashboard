@@ -1,16 +1,15 @@
 ﻿using AutoMapper;
-using Cabio.Dashboard.Api.Dtos;
+using Cabio.Dashboard.Application.Dtos.Drivers;
 using Cabio.Dashboard.Domain.Entities;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Cabio.Dashboard.API.Mappings
+namespace Cabio.Dashboard.Application.Mappings
 {
     public class DriverProfile : Profile
     {
         public DriverProfile()
         {
             CreateMap<Driver, DriverDto>();
-            CreateMap<CreateDriverDto, Driver>();
+            CreateMap<Driver, CreateDriverDto>();
         }
     }
 }

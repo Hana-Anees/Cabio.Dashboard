@@ -1,8 +1,12 @@
-﻿using Cabio.Dashboard.Api.Dtos;
-using Cabio.Dashboard.Domain.Entities;
-using Cabio.Dashboard.Infrastructure.Data;
+﻿using Cabio.Dashboard.Application.Drivers.Commands.CreateDriver;
+using Cabio.Dashboard.Application.Drivers.Commands.DeleteDriver;
+using Cabio.Dashboard.Application.Drivers.Commands.UpdateDriver;
+using Cabio.Dashboard.Application.Drivers.Queries;
+using Cabio.Dashboard.Application.Drivers.Queries.GetAllDrivers;
+using Cabio.Dashboard.Application.Dtos;
+using Cabio.Dashboard.Application.Dtos.Drivers;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cabio.Dashboard.Api.Controllers
 {
@@ -10,95 +14,57 @@ namespace Cabio.Dashboard.Api.Controllers
     [Route("api/[controller]")]
     public class DriverController : ControllerBase
     {
-        private readonly AppDbContext _db;
+        private readonly IMediator _mediator;
 
-        public DriverController(AppDbContext db)
+        public DriverController(IMediator mediator)
         {
-            _db = db;
+            _mediator = mediator;
         }
 
-        // GET: api/driver
+        // GET: api/Driver
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DriverDto>>> GetAll()
+        public async Task<IActionResult> GetAllDrivers()
         {
-            var drivers = await _db.Drivers.ToListAsync();
-
-            return Ok(drivers.Select(d => new DriverDto(
-                d.Id, d.Name, d.Address, d.DateOfBirth, d.LicenseNumber, d.Contact,
-                d.SafeGuarding, d.DisabilityAwareness
-            )));
+            var drivers = await _mediator.Send(new GetAllDriversQuery());
+            return Ok(drivers);
         }
 
-        // GET: api/driver/{id}
-        [HttpGet("{id}")]
-        public async Task<ActionResult<DriverDto>> GetById(int id)
-        {
-            var driver = await _db.Drivers.FindAsync(id);
-            if (driver == null) return NotFound();
+        //// GET: api/Driver/{id}
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GetDriverById(int id)
+        //{
+        //    var driver = await _mediator.Send(new GetDriverByIdQuery(id));
+        //    if (driver == null) return NotFound();
+        //    return Ok(driver);
+        //}
 
-            return new DriverDto(
-                driver.Id, driver.Name, driver.Address, driver.DateOfBirth,
-                driver.LicenseNumber, driver.Contact, driver.SafeGuarding, driver.DisabilityAwareness
-            );
-        }
+        //// POST: api/Driver
+        //[HttpPost]
+        //public async Task<IActionResult> CreateDriver([FromBody] CreateDriverDto driverDto)
+        //{
+        //    var command = new CreateDriverCommand(driverDto);
+        //    var createdDriver = await _mediator.Send(command);
+        //    return CreatedAtAction(nameof(GetDriverById), new { id = createdDriver.Id }, createdDriver);
+        //}
 
-        // POST: api/driver
-        [HttpPost]
-        public async Task<ActionResult<DriverDto>> Create(CreateDriverRequest request)
-        {
-            var driver = new Driver
-            {
-                Name = request.Name,
-                Address = request.Address,
-                DateOfBirth = request.DateOfBirth,
-                LicenseNumber = request.LicenseNumber,
-                Contact = request.Contact,
-                SafeGuarding = request.SafeGuarding,
-                DisabilityAwareness = request.DisabilityAwareness
-            };
+        //// PUT: api/Driver/{id}
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> UpdateDriver(int id, [FromBody] UpdateDriverDto driverDto)
+        //{
+        //    var command = new UpdateDriverCommand(id, driverDto);
+        //    var updatedDriver = await _mediator.Send(command);
+        //    if (updatedDriver == null) return NotFound();
+        //    return Ok(updatedDriver);
+        //}
 
-            _db.Drivers.Add(driver);
-            await _db.SaveChangesAsync();
-
-            var dto = new DriverDto(
-                driver.Id, driver.Name, driver.Address, driver.DateOfBirth,
-                driver.LicenseNumber, driver.Contact, driver.SafeGuarding, driver.DisabilityAwareness
-            );
-
-            return CreatedAtAction(nameof(GetById), new { id = driver.Id }, dto);
-        }
-
-        // PUT: api/driver/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, CreateDriverRequest request)
-        {
-            var driver = await _db.Drivers.FindAsync(id);
-            if (driver == null) return NotFound();
-
-            driver.Name = request.Name;
-            driver.Address = request.Address;
-            driver.DateOfBirth = request.DateOfBirth;
-            driver.LicenseNumber = request.LicenseNumber;
-            driver.Contact = request.Contact;
-            driver.SafeGuarding = request.SafeGuarding;
-            driver.DisabilityAwareness = request.DisabilityAwareness;
-
-            await _db.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        // DELETE: api/driver/{id}
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var driver = await _db.Drivers.FindAsync(id);
-            if (driver == null) return NotFound();
-
-            _db.Drivers.Remove(driver);
-            await _db.SaveChangesAsync();
-
-            return NoContent();
-        }
+        //// DELETE: api/Driver/{id}
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteDriver(int id)
+        //{
+        //    var command = new DeleteDriverCommand(id);
+        //    var result = await _mediator.Send(command);
+        //    if (!result) return NotFound();
+        //    return NoContent();
+        //}
     }
 }

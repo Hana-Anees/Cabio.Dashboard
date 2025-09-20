@@ -1,18 +1,17 @@
 ﻿using AutoMapper;
-using Cabio.Dashboard.Api.Models;
+using Cabio.Dashboard.Application.Dtos.Drivers;
 using Cabio.Dashboard.Domain.Interfaces;
 using MediatR;
 
-namespace Cabio.Dashboard.Application.Drivers.Queries
+namespace Cabio.Dashboard.Application.Drivers.Queries.GetAllDrivers
 {
-    public record GetAllDriversQuery() : IRequest<IEnumerable<DriverDto>>;
-
-    public class GetAllDriversHandler : IRequestHandler<GetAllDriversQuery, IEnumerable<DriverDto>>
+    // Handles the logic for GetAllDriversQuery
+    public class GetAllDriversQueryHandler : IRequestHandler<GetAllDriversQuery, IEnumerable<DriverDto>>
     {
         private readonly IDriverRepository _repository;
         private readonly IMapper _mapper;
 
-        public GetAllDriversHandler(IDriverRepository repository, IMapper mapper)
+        public GetAllDriversQueryHandler(IDriverRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;

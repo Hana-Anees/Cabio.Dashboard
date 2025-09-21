@@ -2,7 +2,7 @@
 using Cabio.Dashboard.Auth.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Cabio.Dashboard.Auth.Controllers
+namespace Cabio.Dashboard.Api.Controllers.v1
 {
     [ApiController]
     [Route("api/[controller]")]

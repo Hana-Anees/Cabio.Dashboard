@@ -1,19 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <Compile Remove="Drivers\**" />
+    <EmbeddedResource Remove="Drivers\**" />
+    <None Remove="Drivers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Cabio.Dashboard.Domain\Cabio.Dashboard.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="15.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="FluentValidation" Version="12.0.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
     <PackageReference Include="MediatR" Version="13.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Drivers\Commands\DeleteDriver\" />
-    <Folder Include="Drivers\Commands\UpdateDriver\" />
-    <Folder Include="Drivers\Queries\GetDriverById\" />
   </ItemGroup>
 
   <PropertyGroup>

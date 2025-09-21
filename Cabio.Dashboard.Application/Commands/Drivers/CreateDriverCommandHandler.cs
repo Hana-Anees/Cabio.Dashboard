@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Cabio.Dashboard.Api.Dtos;
-using Cabio.Dashboard.Domain.Entities;
 using Cabio.Dashboard.Domain.Interfaces;
+using Cabio.Dashboard.Application.Dtos.Drivers;
+using Cabio.Dashboard.Domain.Entities;
 using MediatR;
 
-namespace Cabio.Dashboard.Application.Drivers.Commands.CreateDriver
+namespace Cabio.Dashboard.Application.Commands.Drivers
 {    
     public class CreateDriverCommandHandler : IRequestHandler<CreateDriverCommand, DriverDto>
     {

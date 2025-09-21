@@ -3,7 +3,7 @@ using Cabio.Dashboard.Application.Dtos.Drivers;
 using Cabio.Dashboard.Domain.Interfaces;
 using MediatR;
 
-namespace Cabio.Dashboard.Application.Drivers.Queries.GetAllDrivers
+namespace Cabio.Dashboard.Application.Queries.Drivers
 {
     // Handles the logic for GetAllDriversQuery
     public class GetAllDriversQueryHandler : IRequestHandler<GetAllDriversQuery, IEnumerable<DriverDto>>

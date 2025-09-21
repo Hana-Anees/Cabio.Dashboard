@@ -8,8 +8,12 @@ namespace Cabio.Dashboard.Application.Mappings
     {
         public DriverProfile()
         {
+            // Domain → DTOs
             CreateMap<Driver, DriverDto>();
-            CreateMap<Driver, CreateDriverDto>();
+
+            // DTOs → Domain
+            CreateMap<CreateDriverDto, Driver>();
+            CreateMap<UpdateDriverDto, Driver>();
         }
     }
 }

@@ -1,7 +1,11 @@
-﻿using Cabio.Dashboard.Auth.Services;
+﻿using Cabio.Dashboard.Application.Validators.Drivers;
+using Cabio.Dashboard.Auth.Services;
 using Cabio.Dashboard.Infrastructure;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Cabio.Dashboard.Api.Middleware;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
@@ -32,6 +36,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSecret))
         };
     });
+
+builder.Services.AddFluentValidationAutoValidation(); 
+builder.Services.AddValidatorsFromAssemblyContaining<CreateDriverDtoValidator>();
 
 builder.Services.AddAuthorization();
 
@@ -71,6 +78,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

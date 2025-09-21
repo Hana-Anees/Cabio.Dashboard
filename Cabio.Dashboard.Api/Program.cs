@@ -1,11 +1,16 @@
-﻿using Cabio.Dashboard.Application.Validators.Drivers;
+﻿using Cabio.Dashboard.Api.Middleware;
+using Cabio.Dashboard.Application.Commands.Drivers;
+using Cabio.Dashboard.Application.Services;
+using Cabio.Dashboard.Application.Services.Interfaces;
+using Cabio.Dashboard.Application.Validators.Drivers;
 using Cabio.Dashboard.Auth.Services;
+using Cabio.Dashboard.Domain.Interfaces;
 using Cabio.Dashboard.Infrastructure;
+using Cabio.Dashboard.Infrastructure.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Cabio.Dashboard.Api.Middleware;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
@@ -20,6 +25,10 @@ var jwtIssuer = "Cabio.Dashboard";
 
 // Add JwtService
 builder.Services.AddSingleton<IJwtService>(new JwtService(jwtSecret, jwtIssuer));
+builder.Services.AddScoped<IDriverRepository, DriverRepository>();
+builder.Services.AddScoped<IDriverService, DriverService>();
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(CreateDriverCommandHandler).Assembly));
 
 // Add Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -39,6 +48,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddFluentValidationAutoValidation(); 
 builder.Services.AddValidatorsFromAssemblyContaining<CreateDriverDtoValidator>();
+// Register AutoMapper (scan Application layer for profiles)
+builder.Services.AddAutoMapper(typeof(Cabio.Dashboard.Application.Mappings.DriverProfile).Assembly);
+
 
 builder.Services.AddAuthorization();
 
@@ -79,9 +91,10 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-app.UseMiddleware<GlobalExceptionMiddleware>();
+
 
 app.UseHttpsRedirection();
+//app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>

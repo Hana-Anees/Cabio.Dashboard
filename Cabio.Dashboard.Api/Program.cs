@@ -1,5 +1,6 @@
 ﻿using Cabio.Dashboard.Api.Middleware;
 using Cabio.Dashboard.Application.Commands.Drivers;
+using Cabio.Dashboard.Application.Queries.Drivers;
 using Cabio.Dashboard.Application.Services;
 using Cabio.Dashboard.Application.Services.Interfaces;
 using Cabio.Dashboard.Application.Validators.Drivers;
@@ -16,21 +17,24 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// --- Database & Infrastructure ---
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddInfrastructure(connectionString);
 
-// JWT config (later move to appsettings.json)
+// --- JWT ---
 var jwtSecret = "SuperSecretKey1234567890987654321123456";
 var jwtIssuer = "Cabio.Dashboard";
-
-// Add JwtService
 builder.Services.AddSingleton<IJwtService>(new JwtService(jwtSecret, jwtIssuer));
+
+// --- Repositories & Services ---
 builder.Services.AddScoped<IDriverRepository, DriverRepository>();
 builder.Services.AddScoped<IDriverService, DriverService>();
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(CreateDriverCommandHandler).Assembly));
 
-// Add Authentication
+// --- MediatR ---
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssemblies(typeof(GetAllDriversQueryHandler).Assembly));
+
+// --- Authentication ---
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -46,23 +50,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddFluentValidationAutoValidation(); 
+// --- FluentValidation ---
+builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateDriverDtoValidator>();
-// Register AutoMapper (scan Application layer for profiles)
+
+// --- AutoMapper ---
 builder.Services.AddAutoMapper(typeof(Cabio.Dashboard.Application.Mappings.DriverProfile).Assembly);
 
-
+// --- Authorization ---
 builder.Services.AddAuthorization();
 
-// Add Controllers
+// --- Controllers ---
 builder.Services.AddControllers();
 
-// Add Swagger with JWT support
+// --- Swagger with JWT ---
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Cabio Dashboard API", Version = "v1" });
-
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -72,7 +77,6 @@ builder.Services.AddSwaggerGen(c =>
         In = ParameterLocation.Header,
         Description = "Enter 'Bearer' [space] and then your token."
     });
-
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -91,22 +95,21 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-
-
+// --- Middleware ---
 app.UseHttpsRedirection();
-//app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseMiddleware<GlobalExceptionMiddleware>(); 
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cabio Dashboard API v1");
-    c.RoutePrefix = "swagger"; // opens at /swagger
+    c.RoutePrefix = "swagger";
 });
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Map Controllers
+// --- Map Controllers ---
 app.MapControllers();
 
 app.Run();

@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 
 namespace Cabio.Dashboard.Api.Middleware
@@ -23,56 +22,50 @@ namespace Cabio.Dashboard.Api.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unhandled exception occurred");
+                _logger.LogError(ex, "Unhandled exception: {Message}", ex.Message);
                 await HandleExceptionAsync(context, ex);
             }
         }
 
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
+            HttpStatusCode status;
+            string message = exception.Message;
+
+            // Determine HTTP status code based on exception type
+            switch (exception)
+            {
+                case UnauthorizedAccessException:
+                    status = HttpStatusCode.Unauthorized; // 401
+                    break;
+
+                case ArgumentException:
+                case InvalidOperationException:
+                    status = HttpStatusCode.BadRequest; // 400
+                    break;
+
+                case KeyNotFoundException:
+                    status = HttpStatusCode.NotFound; // 404
+                    break;
+
+                default:
+                    status = HttpStatusCode.InternalServerError; // 500
+                    break;
+            }
+
+            var response = new
+            {
+                success = false,
+                status = (int)status,
+                error = message,
+                timestamp = DateTime.UtcNow
+            };
+
+            var payload = JsonSerializer.Serialize(response);
             context.Response.ContentType = "application/json";
-            int statusCode;
-            object responseBody;
+            context.Response.StatusCode = (int)status;
 
-            if (exception is ValidationException validationEx)
-            {
-                statusCode = (int)HttpStatusCode.BadRequest;
-                responseBody = new
-                {
-                    status = statusCode,
-                    errors = validationEx.Errors.Select(e => new { e.PropertyName, e.ErrorMessage })
-                };
-            }
-            else if (exception is KeyNotFoundException notFoundEx)
-            {
-                statusCode = (int)HttpStatusCode.NotFound;
-                responseBody = new
-                {
-                    status = statusCode,
-                    message = notFoundEx.Message
-                };
-            }
-            else if (exception is UnauthorizedAccessException unauthorizedEx)
-            {
-                statusCode = (int)HttpStatusCode.Unauthorized;
-                responseBody = new
-                {
-                    status = statusCode,
-                    message = unauthorizedEx.Message
-                };
-            }
-            else
-            {
-                statusCode = (int)HttpStatusCode.InternalServerError;
-                responseBody = new
-                {
-                    status = statusCode,
-                    message = "An unexpected error occurred. Please try again later."
-                };
-            }
-
-            context.Response.StatusCode = statusCode;
-            return context.Response.WriteAsync(JsonSerializer.Serialize(responseBody));
+            return context.Response.WriteAsync(payload);
         }
     }
 }

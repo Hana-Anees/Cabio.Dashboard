@@ -2,7 +2,7 @@
 using Cabio.Dashboard.Application.Commands.Drivers;
 using Cabio.Dashboard.Application.Queries.Drivers;
 using Cabio.Dashboard.Application.Services;
-using Cabio.Dashboard.Application.Services.Interfaces;
+using Cabio.Dashboard.Application.Validators;
 using Cabio.Dashboard.Application.Validators.Drivers;
 using Cabio.Dashboard.Auth.Services;
 using Cabio.Dashboard.Domain.Interfaces;
@@ -29,6 +29,9 @@ builder.Services.AddSingleton<IJwtService>(new JwtService(jwtSecret, jwtIssuer))
 // --- Repositories & Services ---
 builder.Services.AddScoped<IDriverRepository, DriverRepository>();
 builder.Services.AddScoped<IDriverService, DriverService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
 
 // --- MediatR ---
 builder.Services.AddMediatR(cfg =>
@@ -53,9 +56,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // --- FluentValidation ---
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateDriverDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UserLoginDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UserSignupDtoValidator>();
 
 // --- AutoMapper ---
 builder.Services.AddAutoMapper(typeof(Cabio.Dashboard.Application.Mappings.DriverProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(Cabio.Dashboard.Application.Mappings.UserProfile).Assembly);
 
 // --- Authorization ---
 builder.Services.AddAuthorization();

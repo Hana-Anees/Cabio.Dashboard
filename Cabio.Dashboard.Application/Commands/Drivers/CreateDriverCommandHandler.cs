@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Cabio.Dashboard.Application.Dtos.Drivers;
-using Cabio.Dashboard.Application.Services.Interfaces;
+using Cabio.Dashboard.Application.Services;
 using Cabio.Dashboard.Domain.Entities;
 using MediatR;
 

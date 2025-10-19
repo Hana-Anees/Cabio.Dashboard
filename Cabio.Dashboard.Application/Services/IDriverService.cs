@@ -1,6 +1,6 @@
 ﻿using Cabio.Dashboard.Domain.Entities;
 
-namespace Cabio.Dashboard.Application.Services.Interfaces
+namespace Cabio.Dashboard.Application.Services
 {
     public interface IDriverService
     {

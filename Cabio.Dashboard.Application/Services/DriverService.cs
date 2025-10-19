@@ -1,6 +1,6 @@
 ﻿using Cabio.Dashboard.Domain.Entities;
 using Cabio.Dashboard.Domain.Interfaces;
-using Cabio.Dashboard.Application.Services.Interfaces;
+using Cabio.Dashboard.Application.Services;
 using System;
 using System.Threading.Tasks;
 

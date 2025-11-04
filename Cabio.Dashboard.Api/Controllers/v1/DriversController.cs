@@ -1,11 +1,13 @@
-﻿using Cabio.Dashboard.Application.Queries.Drivers;
-using Cabio.Dashboard.Application.Commands.Drivers;
+﻿using Cabio.Dashboard.Application.Commands.Drivers;
 using Cabio.Dashboard.Application.Dtos.Drivers;
+using Cabio.Dashboard.Application.Queries.Drivers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cabio.Dashboard.Api.Controllers.v1
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class DriversController : ControllerBase

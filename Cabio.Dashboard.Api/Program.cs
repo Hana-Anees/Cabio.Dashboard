@@ -1,5 +1,4 @@
 ﻿using Cabio.Dashboard.Api.Middleware;
-using Cabio.Dashboard.Application.Commands.Drivers;
 using Cabio.Dashboard.Application.Queries.Drivers;
 using Cabio.Dashboard.Application.Services;
 using Cabio.Dashboard.Application.Validators;
@@ -109,7 +108,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cabio Dashboard API v1");
-    c.RoutePrefix = "swagger";
+    c.RoutePrefix = string.Empty;
 });
 
 app.UseAuthentication();

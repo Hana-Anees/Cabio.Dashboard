@@ -8,16 +8,15 @@ namespace Cabio.Dashboard.Api.Controllers.v1
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class DriverController : ControllerBase
+    public class DriversController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public DriverController(IMediator mediator)
+        public DriversController(IMediator mediator)
         {
             _mediator = mediator;
         }
-
-        // GET: api/Driver
+       
         [HttpGet]
         public async Task<IActionResult> GetAllDrivers()
         {
@@ -26,7 +25,7 @@ namespace Cabio.Dashboard.Api.Controllers.v1
         }
 
         // GET: api/Driver/{id}
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetDriverById(int id)
         {
             var driver = await _mediator.Send(new GetDriverByIdQuery(id));
@@ -42,9 +41,9 @@ namespace Cabio.Dashboard.Api.Controllers.v1
             var createdDriver = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetDriverById), new { id = createdDriver.Id }, createdDriver);
         }
-
+       
         // PUT: api/Driver/{id}
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateDriver(int id, [FromBody] UpdateDriverDto driverDto)
         {
             var command = new UpdateDriverCommand(id, driverDto);
@@ -54,7 +53,7 @@ namespace Cabio.Dashboard.Api.Controllers.v1
         }
 
         // DELETE: api/Driver/{id}
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteDriver(int id)
         {
             var command = new DeleteDriverCommand(id);

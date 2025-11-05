@@ -1,4 +1,4 @@
-﻿//using Cabio.Dashboard.Api.Middleware;
+﻿using Cabio.Dashboard.Api.Middleware;
 using Cabio.Dashboard.Application.Queries.Drivers;
 using Cabio.Dashboard.Application.Services;
 using Cabio.Dashboard.Application.Validators;
@@ -111,7 +111,7 @@ var app = builder.Build();
 
 // --- Middleware ---
 app.UseHttpsRedirection();
-//app.UseMiddleware<GlobalExceptionMiddleware>(); 
+app.UseMiddleware<GlobalExceptionMiddleware>(); 
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>

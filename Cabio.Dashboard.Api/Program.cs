@@ -1,4 +1,4 @@
-﻿using Cabio.Dashboard.Api.Middleware;
+﻿//using Cabio.Dashboard.Api.Middleware;
 using Cabio.Dashboard.Application.Queries.Drivers;
 using Cabio.Dashboard.Application.Services;
 using Cabio.Dashboard.Application.Validators;
@@ -10,6 +10,7 @@ using Cabio.Dashboard.Infrastructure.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -20,10 +21,18 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddInfrastructure(connectionString);
 
-// --- JWT ---
-var jwtSecret = "SuperSecretKey1234567890987654321123456";
-var jwtIssuer = "Cabio.Dashboard";
-builder.Services.AddSingleton<IJwtService>(new JwtService(jwtSecret, jwtIssuer));
+// --- JWT Configuration ---
+var jwtSection = builder.Configuration.GetSection("Jwt");
+var jwtSecret = jwtSection["Secret"];
+var jwtIssuer = jwtSection["Issuer"];
+var jwtAudience = jwtSection["Audience"];
+
+if (string.IsNullOrWhiteSpace(jwtSecret) || string.IsNullOrWhiteSpace(jwtIssuer))
+{
+    throw new InvalidOperationException("Missing JWT configuration. Please check appsettings.json or Azure App Settings.");
+}
+
+builder.Services.AddSingleton<IJwtService>(new JwtService(jwtSecret, jwtIssuer, jwtAudience));
 
 // --- Repositories & Services ---
 builder.Services.AddScoped<IDriverRepository, DriverRepository>();
@@ -47,8 +56,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwtIssuer,
-            ValidAudience = jwtIssuer,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtSecret))
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
         };
     });
 
@@ -102,7 +111,7 @@ var app = builder.Build();
 
 // --- Middleware ---
 app.UseHttpsRedirection();
-app.UseMiddleware<GlobalExceptionMiddleware>(); 
+//app.UseMiddleware<GlobalExceptionMiddleware>(); 
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>

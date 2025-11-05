@@ -9,44 +9,37 @@ namespace Cabio.Dashboard.Auth.Services
     {
         private readonly string _secret;
         private readonly string _issuer;
-        private const int TokenExpiryHours = 2; // Make expiry configurable via appsettings
-        private readonly byte[] _keyBytes;
+        private readonly string _audience;
+        private readonly int _expireMinutes;
         private readonly JwtSecurityTokenHandler _tokenHandler = new();
 
-        public JwtService(string secret, string issuer)
+        public JwtService(string secret, string issuer, string audience, int expireMinutes = 120)
         {
             _secret = secret;
             _issuer = issuer;
-            _keyBytes = Encoding.UTF8.GetBytes(secret);
+            _audience = audience;
+            _expireMinutes = expireMinutes;
         }
 
-        public string GenerateToken(string username, string role) =>
-            _tokenHandler.WriteToken(
-                _tokenHandler.CreateToken(
-                    CreateTokenDescriptor(username, role, _keyBytes)
-                )
-            );
-
-        private SecurityTokenDescriptor CreateTokenDescriptor(string username, string role, byte[] key)
+        public string GenerateToken(string username, string role)
         {
-            return new SecurityTokenDescriptor
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
+
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(GetClaims(username, role)),
-                Expires = DateTime.UtcNow.AddHours(TokenExpiryHours),
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Name, username),
+                    new Claim(ClaimTypes.Role, role)
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(_expireMinutes),
                 Issuer = _issuer,
-                Audience = _issuer,
-                SigningCredentials = GetSigningCredentials(key)
+                Audience = _audience,
+                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
             };
+
+            var token = _tokenHandler.CreateToken(tokenDescriptor);
+            return _tokenHandler.WriteToken(token);
         }
-        
-        private static IEnumerable<Claim> GetClaims(string username, string role) =>
-            new[]
-            {
-                new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Role, role)
-            };
-       
-        private static SigningCredentials GetSigningCredentials(byte[] key) =>
-            new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
     }
 }
